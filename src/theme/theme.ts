@@ -17,10 +17,20 @@ const theme = createTheme({
         12: 12,
         14: 14,
         18: 18,
+        20: 20,
+        24: 24,
+        28: 28,
+        80: 80
     },
     textVariants: {
         defaults: {
-            color: 'primaryText'
+            color: 'primaryText',
+            fontFamily: 'Roboto_400Regular'
+        },
+        title: {
+            color: 'primaryText',
+            fontFamily: 'Roboto_700Bold'
+
         }
     }
 })

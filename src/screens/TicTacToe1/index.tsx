@@ -29,57 +29,61 @@ const TicTacToe1: React.FC = () => {
 
             newGame[lineIndex][columnIndex] = player
 
-            verifyRowWinner(oldGame)
-            verifyColumnWinner(oldGame, columnIndex)
-            verifyDiagonalWinner(oldGame)
+            const winner = verifyRowWinner(oldGame) || verifyColumnWinner(oldGame, columnIndex) || verifyDiagonalWinner(oldGame)
+            if (winner) {
+                setWinner(winner)
+            }
+
 
             return [...oldGame]
         })
         setCurrentPlayer(oldPlayer => oldPlayer === 'O' ? 'X' : 'O')
     }
 
-    const verifyRowWinner = (currentGame: string[][]) => {
+    const verifyRowWinner = (currentGame: string[][]): PlayerType | null => {
+        let winner: PlayerType | null = null
+
         currentGame.forEach((line) => {
             const XIsWinner = line.every(value => value == 'X')
             if (XIsWinner) {
-                setWinner('X')
-                return
+                winner = 'X'
             }
             const OIsWinner = line.every(value => value == 'O')
             if (OIsWinner) {
-                setWinner('O')
-                return
+                winner = 'O'
             }
-
         })
+
+        return winner
     }
-    const verifyColumnWinner = (currentGame: string[][], column: number) => {
+    const verifyColumnWinner = (currentGame: string[][], column: number): PlayerType | null => {
+        let winner: PlayerType | null = null
+
         const hasColumnWinner = currentGame[0][column] == currentGame[1][column] && currentGame[0][column] == currentGame[2][column]
         if (hasColumnWinner) {
-            console.log(hasColumnWinner);
-
-            const playerWinner = currentGame[0][column] as PlayerType
-            setWinner(playerWinner)
+            winner = currentGame[0][column] as PlayerType
+            return winner
         }
+
+        return winner
     }
-    const verifyDiagonalWinner = (currentGame: string[][]) => {
+    const verifyDiagonalWinner = (currentGame: string[][]): PlayerType | null => {
         const firstDiagonalIsEmpty = currentGame[0][0].length == 0
 
         const diagonalLeftToRigthWinner = currentGame[0][0] == currentGame[1][1] && currentGame[1][1] == currentGame[2][2]
         if (!firstDiagonalIsEmpty && diagonalLeftToRigthWinner) {
             const playerWinner = currentGame[0][0] as PlayerType
-            setWinner(playerWinner)
-            return
+            return playerWinner
         }
 
         const lastDiagonalIsEmpty = currentGame[0][2].length == 0
         const diagonalRigthToLeftWinner = currentGame[0][2] == currentGame[1][1] && currentGame[1][1] == currentGame[2][0]
         if (!lastDiagonalIsEmpty && diagonalRigthToLeftWinner) {
             const playerWinner = currentGame[0][2] as PlayerType
-            setWinner(playerWinner)
-            return
+            return playerWinner
         }
 
+        return null
     }
 
 
@@ -88,6 +92,7 @@ const TicTacToe1: React.FC = () => {
             alert(`O ganhador do jogo foi ${winner}`)
         }
     }, [winner])
+
     return (
         <Box
             flex={1}
