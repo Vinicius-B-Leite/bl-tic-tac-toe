@@ -18,7 +18,6 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <SafeAreaProvider>
-        <StatusBar translucent barStyle='light-content' />
         <Routes />
       </SafeAreaProvider>
     </ThemeProvider>

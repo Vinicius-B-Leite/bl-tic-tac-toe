@@ -1,106 +1,58 @@
 import Box from '@/components/Box';
 import Button from '@/components/Button';
 import Text from '@/components/Text';
-import React, { useEffect, useState } from 'react';
+import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AntDesign } from '@expo/vector-icons';
+import { useTheme } from '@shopify/restyle';
+import { ThemeType } from '@/theme/theme';
+import useTicTacToe from './useTicTacToe';
 
-type PlayerType = 'X' | 'O'
-const INITIAL_STATE = [
-    ['', '', ''],
-    ['', '', ''],
-    ['', '', ''],
-]
+
+
+
 
 const TicTacToe1: React.FC = () => {
-    const [game, setGame] = useState(INITIAL_STATE)
-    const [currentPlayer, setCurrentPlayer] = useState<PlayerType>('X')
-    const [winner, setWinner] = useState<PlayerType | string>('')
+
 
     const { top, bottom } = useSafeAreaInsets()
+    const theme = useTheme<ThemeType>()
+    const navigation = useAppNavigation()
 
-    const handleMark = (lineIndex: number, columnIndex: number, player: PlayerType) => {
+    const { currentPlayer, game, handleMark } = useTicTacToe()
 
-        setGame(oldGame => {
-            const newGame = oldGame
-
-            const alreadyMarked = newGame[lineIndex][columnIndex].length > 0
-
-            if (alreadyMarked) return [...oldGame]
-
-            newGame[lineIndex][columnIndex] = player
-
-            const winner = verifyRowWinner(oldGame) || verifyColumnWinner(oldGame, columnIndex) || verifyDiagonalWinner(oldGame)
-            if (winner) {
-                setWinner(winner)
-            }
-
-
-            return [...oldGame]
-        })
-        setCurrentPlayer(oldPlayer => oldPlayer === 'O' ? 'X' : 'O')
-    }
-
-    const verifyRowWinner = (currentGame: string[][]): PlayerType | null => {
-        let winner: PlayerType | null = null
-
-        currentGame.forEach((line) => {
-            const XIsWinner = line.every(value => value == 'X')
-            if (XIsWinner) {
-                winner = 'X'
-            }
-            const OIsWinner = line.every(value => value == 'O')
-            if (OIsWinner) {
-                winner = 'O'
-            }
-        })
-
-        return winner
-    }
-    const verifyColumnWinner = (currentGame: string[][], column: number): PlayerType | null => {
-        let winner: PlayerType | null = null
-
-        const hasColumnWinner = currentGame[0][column] == currentGame[1][column] && currentGame[0][column] == currentGame[2][column]
-        if (hasColumnWinner) {
-            winner = currentGame[0][column] as PlayerType
-            return winner
-        }
-
-        return winner
-    }
-    const verifyDiagonalWinner = (currentGame: string[][]): PlayerType | null => {
-        const firstDiagonalIsEmpty = currentGame[0][0].length == 0
-
-        const diagonalLeftToRigthWinner = currentGame[0][0] == currentGame[1][1] && currentGame[1][1] == currentGame[2][2]
-        if (!firstDiagonalIsEmpty && diagonalLeftToRigthWinner) {
-            const playerWinner = currentGame[0][0] as PlayerType
-            return playerWinner
-        }
-
-        const lastDiagonalIsEmpty = currentGame[0][2].length == 0
-        const diagonalRigthToLeftWinner = currentGame[0][2] == currentGame[1][1] && currentGame[1][1] == currentGame[2][0]
-        if (!lastDiagonalIsEmpty && diagonalRigthToLeftWinner) {
-            const playerWinner = currentGame[0][2] as PlayerType
-            return playerWinner
-        }
-
-        return null
-    }
-
-
-    useEffect(() => {
-        if (winner.length > 0) {
-            alert(`O ganhador do jogo foi ${winner}`)
-        }
-    }, [winner])
 
     return (
         <Box
             flex={1}
             backgroundColor='bg'
-            p={18}
-            justifyContent='center'
-            alignItems='center' style={{ paddingTop: top, paddingBottom: bottom }}>
-            <Box>
+            p={20}
+            style={{ paddingTop: top, paddingBottom: bottom }}>
+
+            <Button
+                onPress={() => navigation.goBack()}
+                flexDirection='row'
+                alignItems='center'
+                gap={10}
+                marginTop={18}
+                style={{ width: '30%' }}
+            >
+                <AntDesign name="arrowleft" size={theme.spacing[28]} color={theme.colors.primaryText} />
+                <Text color='secondText' fontSize={20}>
+                    Voltar
+                </Text>
+            </Button>
+
+            <Text fontSize={25} color='secondText' textAlign='center' marginTop={80}>
+                É a vez de <Text
+                    color={currentPlayer === 'X' ? 'primaryContrast' : 'secondContrast'}
+                    fontWeight='bold'
+                    fontSize={30}
+                >
+                    {currentPlayer}
+                </Text>
+            </Text>
+            <Box justifyContent='center' alignItems='center' mt={80}>
                 {
                     game.map((line, lineIndex) => (
                         <Box
@@ -111,15 +63,17 @@ const TicTacToe1: React.FC = () => {
                                 line.map((v, columnIndex) => (
                                     <Button
                                         onPress={() => handleMark(lineIndex, columnIndex, currentPlayer)}
-                                        width={80}
-                                        height={80}
+                                        width={120}
+                                        height={120}
                                         justifyContent='center'
                                         alignItems='center'
                                         borderRightWidth={columnIndex !== 2 ? 1 : 0}
                                         borderRightColor='secondText'
 
                                     >
-                                        <Text>{v}</Text>
+                                        <Text
+                                            fontSize={30}
+                                            color={v == 'X' ? 'primaryContrast' : 'secondContrast'}>{v}</Text>
                                     </Button>
                                 ))
                             }
