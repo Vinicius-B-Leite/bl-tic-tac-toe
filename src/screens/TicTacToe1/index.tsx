@@ -59,7 +59,9 @@ const TicTacToe1: React.FC = () => {
                             key={line + '' + lineIndex}
                             borderBottomColor='secondText'
                             borderBottomWidth={lineIndex !== 2 ? 1 : 0}
-                            flexDirection='row'>
+                            flexDirection='row'
+
+                        >
                             {
                                 line.map((v, columnIndex) => (
                                     <Button

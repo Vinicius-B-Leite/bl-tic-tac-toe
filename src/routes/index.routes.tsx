@@ -6,6 +6,7 @@ import React from 'react';
 import { RootParamsList } from './type.routes';
 import { StatusBar } from 'react-native';
 import { useTheme } from '@shopify/restyle';
+import TicTacToe2 from '@/screens/TicTacToe2';
 
 
 const Stack = createNativeStackNavigator<RootParamsList>()
@@ -20,6 +21,7 @@ const Routes: React.FC = () => {
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name='Menu' component={Menu} />
                 <Stack.Screen name='TicTacToe1' component={TicTacToe1} />
+                <Stack.Screen name='TicTacToe2' component={TicTacToe2} />
             </Stack.Navigator>
         </NavigationContainer>
     )

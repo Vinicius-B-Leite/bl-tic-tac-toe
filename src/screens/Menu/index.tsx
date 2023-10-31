@@ -36,7 +36,7 @@ const Menu: React.FC = () => {
                     </Button>
 
                     <Button
-                        onPress={() => console.log('first')}
+                        onPress={() => navigation.navigate('TicTacToe2')}
                         borderColor='secondContrast'
                         borderWidth={1}
                         p={20}
@@ -44,7 +44,7 @@ const Menu: React.FC = () => {
                         justifyContent='center'
                         alignItems='center'
                     >
-                        <Text color='secondContrast' fontSize={25}>Jogo da velha 1</Text>
+                        <Text color='secondContrast' fontSize={25}>Jogo da velha 2</Text>
                     </Button>
                 </Box>
 
