@@ -56,12 +56,14 @@ const TicTacToe1: React.FC = () => {
                 {
                     game.map((line, lineIndex) => (
                         <Box
+                            key={line + '' + lineIndex}
                             borderBottomColor='secondText'
                             borderBottomWidth={lineIndex !== 2 ? 1 : 0}
                             flexDirection='row'>
                             {
                                 line.map((v, columnIndex) => (
                                     <Button
+                                        key={columnIndex + '' + v}
                                         onPress={() => handleMark(lineIndex, columnIndex, currentPlayer)}
                                         width={120}
                                         height={120}

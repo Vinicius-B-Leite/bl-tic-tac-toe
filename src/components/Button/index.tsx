@@ -9,7 +9,7 @@ type ButtonProps = BoxType & {
 }
 const Button: React.FC<ButtonProps> = ({ onPress, children, ...boxProps }) => {
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
             <Box {...boxProps}>
                 {children}
             </Box>

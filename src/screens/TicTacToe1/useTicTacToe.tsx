@@ -33,11 +33,11 @@ export default function useTicTacToe() {
             if (winner) {
                 setWinner(winner)
             }
+            setCurrentPlayer(oldPlayer => oldPlayer === 'O' ? 'X' : 'O')
 
 
             return [...oldGame]
         })
-        setCurrentPlayer(oldPlayer => oldPlayer === 'O' ? 'X' : 'O')
     }
 
     useEffect(() => {
