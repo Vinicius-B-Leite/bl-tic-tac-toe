@@ -7,6 +7,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { useTheme } from '@shopify/restyle';
 import { ThemeType } from '@/theme/theme';
 import useTicTacToe from './useTicTacToe';
+import Row from '@/components/Row';
+import Cell from '@/components/Celular';
 
 
 
@@ -55,33 +57,24 @@ const TicTacToe1: React.FC = () => {
             <Box justifyContent='center' alignItems='center' mt={80}>
                 {
                     game.map((line, lineIndex) => (
-                        <Box
-                            key={line + '' + lineIndex}
-                            borderBottomColor='secondText'
-                            borderBottomWidth={lineIndex !== 2 ? 1 : 0}
-                            flexDirection='row'
-
-                        >
+                        <Row index={lineIndex} key={`${line}-${lineIndex}`}>
                             {
                                 line.map((v, columnIndex) => (
-                                    <Button
+                                    <Cell
+                                        index={columnIndex}
                                         key={columnIndex + '' + v}
                                         onPress={() => handleMark(lineIndex, columnIndex, currentPlayer)}
                                         width={120}
                                         height={120}
-                                        justifyContent='center'
-                                        alignItems='center'
-                                        borderRightWidth={columnIndex !== 2 ? 1 : 0}
-                                        borderRightColor='secondText'
 
                                     >
                                         <Text
                                             fontSize={30}
                                             color={v == 'X' ? 'primaryContrast' : 'secondContrast'}>{v}</Text>
-                                    </Button>
+                                    </Cell>
                                 ))
                             }
-                        </Box>
+                        </Row>
                     ))
                 }
             </Box>

@@ -8,6 +8,8 @@ import React, { Children } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useTicTacToe2 from './useTicTacToe2';
+import Row from '@/components/Row';
+import Cell from '@/components/Celular';
 
 // import { Container } from './styles';
 
@@ -16,7 +18,7 @@ const TicTacToe2: React.FC = () => {
     const theme = useTheme<ThemeType>()
     const navigation = useAppNavigation()
 
-    const { game } = useTicTacToe2()
+    const { game, handleMark, currentPlayer, xWinsIndex } = useTicTacToe2()
 
     return (
         <Box
@@ -40,26 +42,57 @@ const TicTacToe2: React.FC = () => {
 
             <Box mt={80} justifyContent='center' alignItems='center'>
                 {
-                    game.map((line, lineIndex) => (
-                        <Box
+                    game.map((lineParent, lineParentIndex) => (
+                        <Row
+                            key={`${lineParentIndex}`}
+                            index={lineParentIndex}
                             borderColor='secondText'
                             flexDirection='row'
-                            borderBottomWidth={[0, 1].includes(lineIndex) ? 2 : 0}
-
+                            borderBottomWidth={[0, 1].includes(lineParentIndex) ? 2 : 0}
+                            m={10}
                         >
+
                             {
-                                line.map((l2, l2Index) => (
-                                    <Row index={l2Index}>
+                                lineParent.map((columnParent, columnParentIndex) => (
+
+                                    <Cell
+                                        key={`${columnParentIndex}`}
+                                        onPress={() => console.log(columnParent)}
+                                        index={columnParentIndex}
+                                        borderRightColor='secondText'
+                                        p={20}
+                                        backgroundColor={xWinsIndex.includes(`${lineParentIndex}${columnParentIndex}`) ? 'alert' : 'bg'}
+
+                                    >
                                         {
-                                            l2.map((v, i) => (
-                                                <BigCeulalar index={i} miniCelularList={v} />
+                                            columnParent.map((lineChild, lineChildIndex) => (
+                                                <Row
+                                                    index={lineChildIndex}
+                                                    key={`${lineChildIndex}`}
+                                                >
+                                                    {
+
+                                                        lineChild.map((columnChild, columnChildIndex) => (
+                                                            <Cell
+                                                                key={`${columnChildIndex}`}
+                                                                onPress={() => handleMark({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex, player: currentPlayer })}
+                                                                index={columnChildIndex}
+                                                                width={25}
+                                                                height={25}
+                                                            >
+                                                                <Text>{columnChild}</Text>
+                                                            </Cell>
+                                                        ))
+                                                    }
+
+                                                </Row>
                                             ))
                                         }
-                                    </Row>
-                                ))
 
+                                    </Cell>
+                                ))
                             }
-                        </Box>
+                        </Row>
                     ))
                 }
             </Box>
@@ -68,50 +101,4 @@ const TicTacToe2: React.FC = () => {
 }
 
 
-const Row = ({ children, index }: { index: number, children: React.ReactNode }) => {
-    return (
-        <Box
-            borderColor='secondText'
-            borderRightWidth={[0, 1, 3, 4, 7, 8, 9].includes(index) ? 2 : 0}
-            p={20}
-            justifyContent='center'
-            alignItems='center'
-        >
-            {children}
-        </Box>
-    )
-}
-const BigCeulalar = ({ index, miniCelularList }: { index: number, miniCelularList: string[] }) => {
-    return (
-        <Box
-            borderColor='secondText'
-            flexDirection='row'
-            justifyContent='center'
-            alignItems='center'
-            borderBottomWidth={[0, 1].includes(index) ? 1 : 0}
-
-        >
-            {
-                miniCelularList.map((v2, i2) => (
-                    <MiniCelular index={i2} value={v2} />
-                ))
-            }
-        </Box>
-    )
-}
-const MiniCelular = ({ index, value }: { value: string, index: number }) => {
-    return (
-        <Box
-            borderColor='secondText'
-            borderRightWidth={[0, 1].includes(index) ? 1 : 0}
-            width={28}
-            height={28}
-            flexDirection='row'
-            justifyContent='center'
-            alignItems='center'
-        >
-            <Text>{value}</Text>
-        </Box>
-    )
-}
 export default TicTacToe2;
