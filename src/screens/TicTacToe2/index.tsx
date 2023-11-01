@@ -12,7 +12,6 @@ import Row from '@/components/Row';
 import Cell from '@/components/Celular';
 import CellParent from './components/CellParent';
 
-// import { Container } from './styles';
 
 const TicTacToe2: React.FC = () => {
     const { top, bottom } = useSafeAreaInsets()
@@ -60,13 +59,13 @@ const TicTacToe2: React.FC = () => {
                             borderColor='secondText'
                             flexDirection='row'
                             borderBottomWidth={[0, 1].includes(lineParentIndex) ? 2 : 0}
-                            m={10}
                         >
 
                             {
                                 lineParent.map((columnParent, columnParentIndex) => (
 
                                     <CellParent
+                                        key={`${columnParentIndex}`}
                                         lineParentIndex={lineParentIndex}
                                         wins={wins}
                                         columnParentIndex={columnParentIndex}
@@ -74,6 +73,7 @@ const TicTacToe2: React.FC = () => {
                                         {
                                             columnParent.map((lineChild, lineChildIndex) => (
                                                 <Row
+                                                    opacity={nextCellToPlay.column === columnParentIndex && nextCellToPlay.line === lineParentIndex ? 1 : 0.3}
                                                     index={lineChildIndex}
                                                     key={`${lineChildIndex}`}
                                                 >
@@ -85,8 +85,8 @@ const TicTacToe2: React.FC = () => {
                                                                 key={`${columnChildIndex}`}
                                                                 onPress={() => handleMark({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex, player: currentPlayer })}
                                                                 index={columnChildIndex}
-                                                                width={25}
-                                                                height={25}
+                                                                width={28}
+                                                                height={28}
                                                             >
                                                                 <Text>{columnChild}</Text>
                                                             </Cell>

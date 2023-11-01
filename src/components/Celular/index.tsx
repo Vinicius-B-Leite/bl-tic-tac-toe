@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Box, { BoxType } from '../Box';
-import Text from '../Text';
+
 
 type CellProps = BoxType & {
     index: number,
@@ -10,7 +10,6 @@ type CellProps = BoxType & {
     wasWined: boolean
 }
 const Cell: React.FC<CellProps> = ({ index, children, onPress, wasWined, ...rest }) => {
-
 
 
     return (
