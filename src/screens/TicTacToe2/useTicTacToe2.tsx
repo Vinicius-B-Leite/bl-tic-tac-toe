@@ -57,10 +57,10 @@ type handleMarkProps = {
 /**
  * marca a jogado
  * verifica se a celula esta ganha
+ * verificar se a celula esta empatada
  * 
  * ---------------
- * verificar se a celula esta empatada
- * verificar a proxima jogada numa celula que esta ganha
+ * verificar a proxima jogada esta numa celula ganha
  * ganhar o jogo de fato
  * 
  */
@@ -82,10 +82,17 @@ export default function useTicTacToe2() {
 
     }
     const ableToPlay = (lineParentIndex: number, columnParentIndex: number) => {
+        const isNextCellHasWin =
+            oWinsIndex.includes(`${lineParentIndex}${columnParentIndex}`) ||
+            xWinsIndex.includes(`${lineParentIndex}${columnParentIndex}`)
 
         const ableToMark = (nextCellToPlay.column == columnParentIndex && nextCellToPlay.line == lineParentIndex)
 
         if (nextCellToPlay.column && !ableToMark) {
+            return false
+        }
+
+        if (nextCellToPlay.column == null && isNextCellHasWin) {
             return false
         }
 
@@ -108,7 +115,16 @@ export default function useTicTacToe2() {
 
 
             copy[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex] = player
-            setNextCellToPlay({ line: lineChildIndex, column: columnChildIndex })
+
+            const isNextCellHasWin =
+                oWinsIndex.includes(`${lineChildIndex}${columnChildIndex}`) ||
+                xWinsIndex.includes(`${lineChildIndex}${columnChildIndex}`)
+
+            if (isNextCellHasWin) {
+                setNextCellToPlay({ line: null, column: null })
+            } else {
+                setNextCellToPlay({ line: lineChildIndex, column: columnChildIndex })
+            }
 
             const winner =
                 verifyRowWinner(copy[lineParentIndex][columnParentIndex]) ||
