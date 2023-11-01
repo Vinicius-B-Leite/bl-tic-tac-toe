@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useTicTacToe2 from './useTicTacToe2';
 import Row from '@/components/Row';
 import Cell from '@/components/Celular';
+import CellParent from './components/CellParent';
 
 // import { Container } from './styles';
 
@@ -18,7 +19,7 @@ const TicTacToe2: React.FC = () => {
     const theme = useTheme<ThemeType>()
     const navigation = useAppNavigation()
 
-    const { game, handleMark, currentPlayer, xWinsIndex } = useTicTacToe2()
+    const { game, handleMark, currentPlayer, xWinsIndex, nextCellToPlay, oWinsIndex } = useTicTacToe2()
 
     return (
         <Box
@@ -55,14 +56,11 @@ const TicTacToe2: React.FC = () => {
                             {
                                 lineParent.map((columnParent, columnParentIndex) => (
 
-                                    <Cell
-                                        key={`${columnParentIndex}`}
-                                        onPress={() => console.log(columnParent)}
-                                        index={columnParentIndex}
-                                        borderRightColor='secondText'
-                                        p={20}
-                                        backgroundColor={xWinsIndex.includes(`${lineParentIndex}${columnParentIndex}`) ? 'alert' : 'bg'}
-
+                                    <CellParent
+                                        lineParentIndex={lineParentIndex}
+                                        xWinsIndex={xWinsIndex}
+                                        oWinsIndex={oWinsIndex}
+                                        columnParentIndex={columnParentIndex}
                                     >
                                         {
                                             columnParent.map((lineChild, lineChildIndex) => (
@@ -89,7 +87,7 @@ const TicTacToe2: React.FC = () => {
                                             ))
                                         }
 
-                                    </Cell>
+                                    </CellParent>
                                 ))
                             }
                         </Row>
