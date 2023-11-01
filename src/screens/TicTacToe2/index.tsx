@@ -41,6 +41,16 @@ const TicTacToe2: React.FC = () => {
                 </Text>
             </Button>
 
+            <Text fontSize={25} color='secondText' textAlign='center' marginTop={80}>
+                É a vez de <Text
+                    color={currentPlayer === 'X' ? 'primaryContrast' : 'secondContrast'}
+                    fontWeight='bold'
+                    fontSize={30}
+                >
+                    {currentPlayer}
+                </Text>
+            </Text>
+
             <Box mt={80} justifyContent='center' alignItems='center'>
                 {
                     game.map((lineParent, lineParentIndex) => (

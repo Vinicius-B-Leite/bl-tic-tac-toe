@@ -61,6 +61,7 @@ const TicTacToe1: React.FC = () => {
                             {
                                 line.map((v, columnIndex) => (
                                     <Cell
+                                        wasWined={false}
                                         index={columnIndex}
                                         key={columnIndex + '' + v}
                                         onPress={() => handleMark(lineIndex, columnIndex, currentPlayer)}
