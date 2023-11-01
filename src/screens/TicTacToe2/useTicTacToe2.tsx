@@ -3,49 +3,9 @@ import { verifyColumnWinner } from "@/utils/verifyColumnWinner";
 import { verifyDiagonalWinner } from "@/utils/verifyDiagonalWinner";
 import { verifyRowWinner } from "@/utils/verifyRowWinner";
 import { useEffect, useState } from "react";
+import { GAME_INITIAL_STATE, WINS_INITIAL_STATE } from "./constants";
 
 
-const INITIAL_STATE = [
-    [[
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ], [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ], [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ]],
-    [[
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ], [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ], [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ]],
-    [[
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ], [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ], [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ]],
-]
 
 type handleMarkProps = {
     lineParentIndex: number,
@@ -54,45 +14,18 @@ type handleMarkProps = {
     columnChildIndex: number,
     player: PlayerType
 }
-/**
- * marca a jogado
- * verifica se a celula esta ganha
- * verificar se a celula esta empatada
- * 
- * ---------------
- * verificar a proxima jogada esta numa celula ganha
- * ganhar o jogo de fato
- * 
- */
 
 export default function useTicTacToe2() {
-    const [game, setGame] = useState(INITIAL_STATE)
+    const [game, setGame] = useState(GAME_INITIAL_STATE)
     const [currentPlayer, setCurrentPlayer] = useState<PlayerType>('X')
-    const [winner, setWinner] = useState<PlayerType | string>('')
-    const [xWinsIndex, setXWinsIndex] = useState<string[]>([])
-    const [oWinsIndex, setOWinsIndex] = useState<string[]>([])
+    const [wins, setWins] = useState(WINS_INITIAL_STATE)
     const [nextCellToPlay, setNextCellToPlay] = useState<{ line: number | null, column: number | null }>({ line: null, column: null })
 
-    const verifyCellWinner = (winner: PlayerType | PlayerType[], lineParentIndex: number, columnParentIndex: number) => {
-        if (winner === 'X') {
-            setXWinsIndex(oldXWins => [...oldXWins, `${lineParentIndex}${columnParentIndex}`])
-            return
-        }
-        setOWinsIndex(oldOWins => [...oldOWins, `${lineParentIndex}${columnParentIndex}`])
-
-    }
     const ableToPlay = (lineParentIndex: number, columnParentIndex: number) => {
-        const isNextCellHasWin =
-            oWinsIndex.includes(`${lineParentIndex}${columnParentIndex}`) ||
-            xWinsIndex.includes(`${lineParentIndex}${columnParentIndex}`)
 
-        const ableToMark = (nextCellToPlay.column == columnParentIndex && nextCellToPlay.line == lineParentIndex)
+        const isCorrectCell = (nextCellToPlay.column == columnParentIndex && nextCellToPlay.line == lineParentIndex)
 
-        if (nextCellToPlay.column && !ableToMark) {
-            return false
-        }
-
-        if (nextCellToPlay.column == null && isNextCellHasWin) {
+        if (nextCellToPlay.column && !isCorrectCell) {
             return false
         }
 
@@ -102,8 +35,8 @@ export default function useTicTacToe2() {
 
     const handleMark = ({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex, player }: handleMarkProps) => {
 
-        const isCorrectCell = ableToPlay(lineParentIndex, columnParentIndex)
-        if (!isCorrectCell) return
+        const isAbleToPlay = ableToPlay(lineParentIndex, columnParentIndex)
+        if (!isAbleToPlay) return
 
         setGame(oldGame => {
             const copy = [...oldGame]
@@ -116,51 +49,43 @@ export default function useTicTacToe2() {
 
             copy[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex] = player
 
-            const isNextCellHasWin =
-                oWinsIndex.includes(`${lineChildIndex}${columnChildIndex}`) ||
-                xWinsIndex.includes(`${lineChildIndex}${columnChildIndex}`)
-
-            if (isNextCellHasWin) {
+            const nextCellToPlayWasWon = wins[lineChildIndex][columnChildIndex].length > 0
+            if (nextCellToPlayWasWon) {
                 setNextCellToPlay({ line: null, column: null })
             } else {
                 setNextCellToPlay({ line: lineChildIndex, column: columnChildIndex })
             }
 
-            const winner =
+
+
+            const winnerChild =
                 verifyRowWinner(copy[lineParentIndex][columnParentIndex]) ||
                 verifyColumnWinner(copy[lineParentIndex][columnParentIndex], columnChildIndex) ||
                 verifyDiagonalWinner(copy[lineParentIndex][columnParentIndex])
 
 
 
-            const isTied = !copy[lineParentIndex][columnParentIndex].map(a => a.includes('')).some(v => v == true)
+            if (winnerChild) {
+                setWins(oldWins => {
+                    oldWins[lineParentIndex][columnParentIndex] = winnerChild
+                    const hasWinner = verifyRowWinner(oldWins) || verifyColumnWinner(oldWins, columnParentIndex) || verifyDiagonalWinner(oldWins)
+                    if (hasWinner) {
+                        alert(`O ganhador do jogo foi ${hasWinner}`)
 
-            if (isTied) {
-                setXWinsIndex(oldXWins => [...oldXWins, `${lineParentIndex}${columnParentIndex}`])
-                setOWinsIndex(oldOWins => [...oldOWins, `${lineParentIndex}${columnParentIndex}`])
-            }
-            if (winner) {
-                verifyCellWinner(winner, lineParentIndex, columnParentIndex)
+                    }
+                    return [...oldWins]
+                })
             }
             setCurrentPlayer(oldPlayer => oldPlayer == 'X' ? 'O' : 'X')
             return [...copy]
         })
     }
-    useEffect(() => {
-        if (winner.length > 0) {
-            console.log('TEVE GANHADORERRR');
-
-            alert(`O ganhador do jogo foi ${winner}`)
-        }
-    }, [winner])
-
 
     return {
         game,
         handleMark,
         currentPlayer,
-        xWinsIndex,
         nextCellToPlay,
-        oWinsIndex
+        wins
     }
 }

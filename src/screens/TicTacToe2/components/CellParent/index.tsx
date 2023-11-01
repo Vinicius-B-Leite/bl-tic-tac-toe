@@ -1,39 +1,36 @@
 import Cell from '@/components/Celular';
+import { verifyColumnWinner } from '@/utils/verifyColumnWinner';
+import { verifyRowWinner } from '@/utils/verifyRowWinner';
 import React from 'react';
 
 
 
 type CellParentProps = {
     columnParentIndex: number
-    xWinsIndex: string[]
-    oWinsIndex: string[]
+    wins: string[][]
     lineParentIndex: number,
     children: React.ReactNode
 }
 
-const CellParent: React.FC<CellParentProps> = ({ columnParentIndex, lineParentIndex, xWinsIndex, children, oWinsIndex }) => {
-    const xWinsThisCell = xWinsIndex.includes(`${lineParentIndex}${columnParentIndex}`)
-    const oWinsThisCell = oWinsIndex.includes(`${lineParentIndex}${columnParentIndex}`)
+const CellParent: React.FC<CellParentProps> = ({ columnParentIndex, wins, children, lineParentIndex }) => {
 
-
-
-    const getWinnerbg = () => {
-        const isTied = xWinsThisCell && oWinsThisCell
-        if (isTied) return 'alert'
-        if (xWinsThisCell) return 'primaryContrast'
-        if (oWinsThisCell) return 'secondContrast'
-
+    const getCellWinner = () => {
+        if (wins[lineParentIndex][columnParentIndex] == 'XO') return 'alert'
+        if (wins[lineParentIndex][columnParentIndex] == 'X') return 'primaryContrast'
+        if (wins[lineParentIndex][columnParentIndex] == 'O') return 'secondContrast'
         return 'bg'
     }
+
 
     return (
         <Cell
             key={`${columnParentIndex}`}
+            wasWined={false}
             onPress={() => { }}
             index={columnParentIndex}
             borderRightColor='secondText'
             p={20}
-            backgroundColor={getWinnerbg()}
+            backgroundColor={getCellWinner()}
 
         >
 

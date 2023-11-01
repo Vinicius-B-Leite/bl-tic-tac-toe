@@ -6,11 +6,15 @@ import Text from '../Text';
 type CellProps = BoxType & {
     index: number,
     children: React.ReactNode,
-    onPress: () => void
+    onPress: () => void,
+    wasWined: boolean
 }
-const Cell: React.FC<CellProps> = ({ index, children, onPress, ...rest }) => {
+const Cell: React.FC<CellProps> = ({ index, children, onPress, wasWined, ...rest }) => {
+
+
+
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={() => !wasWined && onPress()}>
             <Box
                 borderColor='secondText'
                 justifyContent='center'

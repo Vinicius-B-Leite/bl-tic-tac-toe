@@ -19,7 +19,7 @@ const TicTacToe2: React.FC = () => {
     const theme = useTheme<ThemeType>()
     const navigation = useAppNavigation()
 
-    const { game, handleMark, currentPlayer, xWinsIndex, nextCellToPlay, oWinsIndex } = useTicTacToe2()
+    const { game, handleMark, currentPlayer, nextCellToPlay, wins } = useTicTacToe2()
 
     return (
         <Box
@@ -58,8 +58,7 @@ const TicTacToe2: React.FC = () => {
 
                                     <CellParent
                                         lineParentIndex={lineParentIndex}
-                                        xWinsIndex={xWinsIndex}
-                                        oWinsIndex={oWinsIndex}
+                                        wins={wins}
                                         columnParentIndex={columnParentIndex}
                                     >
                                         {
@@ -72,6 +71,7 @@ const TicTacToe2: React.FC = () => {
 
                                                         lineChild.map((columnChild, columnChildIndex) => (
                                                             <Cell
+                                                                wasWined={wins[lineParentIndex][columnParentIndex].length > 0}
                                                                 key={`${columnChildIndex}`}
                                                                 onPress={() => handleMark({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex, player: currentPlayer })}
                                                                 index={columnChildIndex}
