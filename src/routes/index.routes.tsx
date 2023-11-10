@@ -7,9 +7,11 @@ import { RootParamsList } from './type.routes';
 import { StatusBar } from 'react-native';
 import { useTheme } from '@shopify/restyle';
 import TicTacToe2 from '@/screens/TicTacToe2';
+import Win from '@/screens/Win';
 
 
 const Stack = createNativeStackNavigator<RootParamsList>()
+
 const Routes: React.FC = () => {
     const theme = useTheme()
     DefaultTheme.colors.background = theme.colors.bg
@@ -22,6 +24,7 @@ const Routes: React.FC = () => {
                 <Stack.Screen name='Menu' component={Menu} />
                 <Stack.Screen name='TicTacToe1' component={TicTacToe1} />
                 <Stack.Screen name='TicTacToe2' component={TicTacToe2} />
+                <Stack.Screen name='Win' component={Win} />
             </Stack.Navigator>
         </NavigationContainer>
     )

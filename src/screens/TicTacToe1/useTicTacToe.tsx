@@ -1,3 +1,4 @@
+import { useAppNavigation } from "@/hooks/useAppNavigation"
 import { PlayerType } from "@/types/PlayerType"
 import { verifyColumnWinner } from "@/utils/verifyColumnWinner"
 import { verifyDiagonalWinner } from "@/utils/verifyDiagonalWinner"
@@ -6,17 +7,14 @@ import { useEffect, useState } from "react"
 
 
 
-const INITIAL_STATE = [
-    ['', '', ''],
-    ['', '', ''],
-    ['', '', ''],
-]
-
-
 export default function useTicTacToe() {
-    const [game, setGame] = useState(INITIAL_STATE)
+
+    const navigation = useAppNavigation()
+
+    const [game, setGame] = useState([['', '', ''], ['', '', ''], ['', '', '']])
     const [currentPlayer, setCurrentPlayer] = useState<PlayerType>('X')
     const [winner, setWinner] = useState<PlayerType | string>('')
+
 
     const handleMark = (lineIndex: number, columnIndex: number, player: PlayerType) => {
 
@@ -42,9 +40,24 @@ export default function useTicTacToe() {
 
     useEffect(() => {
         if (winner.length > 0) {
-            alert(`O ganhador do jogo foi ${winner}`)
+
+            navigation.reset({
+                index: 1,
+                routes: [
+                    {
+                        name: 'Menu'
+                    },
+                    {
+                        name: 'Win',
+                        params: {
+                            winner: winner as PlayerType
+                        }
+                    }
+                ]
+            })
+
         }
-    }, [winner])
+    }, [winner, game])
 
 
     return {
