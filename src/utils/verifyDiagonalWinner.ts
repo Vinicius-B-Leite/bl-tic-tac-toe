@@ -1,18 +1,20 @@
 import { PlayerType } from "@/types/PlayerType"
 
-export const verifyDiagonalWinner = (currentGame: string[][]): PlayerType | null => {
+export const verifyDiagonalWinner = (currentGame: string[][], player: PlayerType): PlayerType | null => {
     const firstDiagonalIsEmpty = currentGame[0][0].length == 0
 
-    const diagonalLeftToRigthWinner = currentGame[0][0] == currentGame[1][1] && currentGame[1][1] == currentGame[2][2]
+    const diagonalLeftToRigth = [currentGame[0][0], currentGame[1][1], currentGame[2][2]]
+    const diagonalLeftToRigthWinner = diagonalLeftToRigth.every(d => d == 'OX' || d == player)
     if (!firstDiagonalIsEmpty && diagonalLeftToRigthWinner) {
-        const playerWinner = currentGame[0][0] as PlayerType
+        const playerWinner = player
         return playerWinner
     }
 
     const lastDiagonalIsEmpty = currentGame[0][2].length == 0
-    const diagonalRigthToLeftWinner = currentGame[0][2] == currentGame[1][1] && currentGame[1][1] == currentGame[2][0]
+    const diagonalRigthToLeft = [currentGame[0][2], currentGame[1][1], currentGame[2][0]]
+    const diagonalRigthToLeftWinner = diagonalRigthToLeft.every(d => d == 'OX' || d == player)
     if (!lastDiagonalIsEmpty && diagonalRigthToLeftWinner) {
-        const playerWinner = currentGame[0][2] as PlayerType
+        const playerWinner = player
         return playerWinner
     }
 

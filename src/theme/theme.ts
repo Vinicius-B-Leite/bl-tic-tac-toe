@@ -8,6 +8,7 @@ const theme = createTheme({
         secondContrast: '#F6C000',
         secondTranslucentContrast: 'rgba(246, 192, 0, 0.3)',
         alert: '#FF0000',
+        alertTranslucent: 'rgba(255, 0, 0, 0.3)',
         primaryText: '#FFFFFF',
         secondText: '#989898',
     },

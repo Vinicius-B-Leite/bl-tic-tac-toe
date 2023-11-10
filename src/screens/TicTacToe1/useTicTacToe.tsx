@@ -29,7 +29,7 @@ export default function useTicTacToe() {
 
             newGame[lineIndex][columnIndex] = player
 
-            const winner = verifyRowWinner(oldGame) || verifyColumnWinner(oldGame, columnIndex) || verifyDiagonalWinner(oldGame)
+            const winner = verifyRowWinner(oldGame) || verifyColumnWinner(oldGame, player) || verifyDiagonalWinner(oldGame, player)
             if (winner) {
                 setWinner(winner)
             }

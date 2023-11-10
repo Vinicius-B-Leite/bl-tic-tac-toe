@@ -20,66 +20,84 @@ export default function useTicTacToe2() {
     const [currentPlayer, setCurrentPlayer] = useState<PlayerType>('X')
     const [wins, setWins] = useState(WINS_INITIAL_STATE)
     const [nextCellToPlay, setNextCellToPlay] = useState<{ line: number | null, column: number | null }>({ line: null, column: null })
-
-    const ableToPlay = (lineParentIndex: number, columnParentIndex: number) => {
-
-        const isCorrectCell = (nextCellToPlay.column == columnParentIndex && nextCellToPlay.line == lineParentIndex)
-
-        if (nextCellToPlay.column && !isCorrectCell) {
-            return false
-        }
-
-        return true
-
-    }
+    const [cellMarked, setCellMarked] = useState<Omit<handleMarkProps, 'player'>>()
 
     const handleMark = ({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex, player }: handleMarkProps) => {
 
-        const isAbleToPlay = ableToPlay(lineParentIndex, columnParentIndex)
-        if (!isAbleToPlay) return
+        //verificar se pode jogar
 
+        const canPlay = nextCellToPlay.column == null || (nextCellToPlay.column === columnParentIndex && nextCellToPlay.line === lineParentIndex)
+        if (!canPlay) return
+
+        //marcar jogada
         setGame(oldGame => {
-            const copy = [...oldGame]
-
-
-            const cellWasMarked = copy[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex].length > 0
-            if (cellWasMarked) return [...copy]
-
-
-
-            copy[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex] = player
-
-            const nextCellToPlayWasWon = wins[lineChildIndex][columnChildIndex].length > 0
-            if (nextCellToPlayWasWon) {
-                setNextCellToPlay({ line: null, column: null })
-            } else {
-                setNextCellToPlay({ line: lineChildIndex, column: columnChildIndex })
-            }
-
-
-
-            const winnerChild =
-                verifyRowWinner(copy[lineParentIndex][columnParentIndex]) ||
-                verifyColumnWinner(copy[lineParentIndex][columnParentIndex], columnChildIndex) ||
-                verifyDiagonalWinner(copy[lineParentIndex][columnParentIndex])
-
-
-
-            if (winnerChild) {
-                setWins(oldWins => {
-                    oldWins[lineParentIndex][columnParentIndex] = winnerChild
-                    const hasWinner = verifyRowWinner(oldWins) || verifyColumnWinner(oldWins, columnParentIndex) || verifyDiagonalWinner(oldWins)
-                    if (hasWinner) {
-                        alert(`O ganhador do jogo foi ${hasWinner}`)
-
-                    }
-                    return [...oldWins]
-                })
-            }
-            setCurrentPlayer(oldPlayer => oldPlayer == 'X' ? 'O' : 'X')
-            return [...copy]
+            oldGame[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex] = player
+            return [...oldGame]
         })
+
+        setCellMarked({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex })
+
+
+        //troca jogador
+        setCurrentPlayer(oldPlayer => oldPlayer === 'O' ? 'X' : 'O')
     }
+
+    //marcou ponto?
+    useEffect(() => {
+        if (cellMarked === undefined) return
+
+        const { lineParentIndex, columnChildIndex, columnParentIndex, lineChildIndex } = cellMarked
+
+        const gameChild = game[lineParentIndex][columnParentIndex]
+
+        const wasTied = gameChild.map(row => row.includes('')).every(emptySpace => emptySpace === false)
+        const player = game[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex] as PlayerType
+        const makePoint = verifyRowWinner(gameChild) || verifyColumnWinner(gameChild, player) || verifyDiagonalWinner(gameChild, player)
+
+        if (makePoint) {
+            setWins(oldWins => {
+                oldWins[lineParentIndex][columnParentIndex] = makePoint
+                return [...oldWins]
+            })
+        }
+
+        if (!makePoint && wasTied) {
+            setWins(oldWins => {
+                oldWins[lineParentIndex][columnParentIndex] = 'OX'
+                return [...oldWins]
+            })
+        }
+    }, [game, cellMarked, currentPlayer])
+
+    //venceu?
+    useEffect(() => {
+        if (cellMarked === undefined) return
+        const { lineParentIndex, columnChildIndex, columnParentIndex, lineChildIndex } = cellMarked
+
+        const player = game[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex] as PlayerType
+
+        const winner = verifyRowWinner(wins) || verifyColumnWinner(wins, player) || verifyDiagonalWinner(wins, player)
+        if (winner) {
+            alert(winner)
+        }
+    }, [wins, cellMarked, currentPlayer])
+
+    //lidar proxima jogada
+    useEffect(() => {
+        if (cellMarked === undefined) return
+        const { columnChildIndex, lineChildIndex } = cellMarked
+
+        const nextCellToPlayWasTied = game[lineChildIndex][columnChildIndex].map(row => row.includes('')).every(emptySpace => emptySpace === false)
+        const nextCellToPlayWasWon = wins[lineChildIndex][columnChildIndex].length > 0
+
+        if (nextCellToPlayWasWon || nextCellToPlayWasTied) {
+            setNextCellToPlay({ line: null, column: null })
+        } else {
+            setNextCellToPlay({ line: lineChildIndex, column: columnChildIndex })
+        }
+    }, [wins, cellMarked, game])
+
+
 
     return {
         game,

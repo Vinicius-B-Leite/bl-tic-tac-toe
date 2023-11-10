@@ -1,0 +1,2 @@
+- proxima jogada com base no quadrarinho jogoado
+- proxima jogada livre caso o quadrado esteja ganho ou empatado
