@@ -1,9 +1,9 @@
+import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { PlayerType } from "@/types/PlayerType";
 import { verifyColumnWinner } from "@/utils/verifyColumnWinner";
 import { verifyDiagonalWinner } from "@/utils/verifyDiagonalWinner";
 import { verifyRowWinner } from "@/utils/verifyRowWinner";
 import { useEffect, useState } from "react";
-import { GAME_INITIAL_STATE, WINS_INITIAL_STATE } from "./constants";
 
 
 
@@ -16,20 +16,20 @@ type handleMarkProps = {
 }
 
 export default function useTicTacToe2() {
-    const [game, setGame] = useState(GAME_INITIAL_STATE)
+    const navigation = useAppNavigation()
+
+    const [game, setGame] = useState([[[['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']]], [[['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']]], [[['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']],],])
     const [currentPlayer, setCurrentPlayer] = useState<PlayerType>('X')
-    const [wins, setWins] = useState(WINS_INITIAL_STATE)
+    const [wins, setWins] = useState([['', '', ''], ['', '', ''], ['', '', '']])
     const [nextCellToPlay, setNextCellToPlay] = useState<{ line: number | null, column: number | null }>({ line: null, column: null })
     const [cellMarked, setCellMarked] = useState<Omit<handleMarkProps, 'player'>>()
 
     const handleMark = ({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex, player }: handleMarkProps) => {
 
-        //verificar se pode jogar
-
         const canPlay = nextCellToPlay.column == null || (nextCellToPlay.column === columnParentIndex && nextCellToPlay.line === lineParentIndex)
         if (!canPlay) return
 
-        //marcar jogada
+
         setGame(oldGame => {
             oldGame[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex] = player
             return [...oldGame]
@@ -38,11 +38,10 @@ export default function useTicTacToe2() {
         setCellMarked({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex })
 
 
-        //troca jogador
+
         setCurrentPlayer(oldPlayer => oldPlayer === 'O' ? 'X' : 'O')
     }
 
-    //marcou ponto?
     useEffect(() => {
         if (cellMarked === undefined) return
 
@@ -69,7 +68,6 @@ export default function useTicTacToe2() {
         }
     }, [game, cellMarked, currentPlayer])
 
-    //venceu?
     useEffect(() => {
         if (cellMarked === undefined) return
         const { lineParentIndex, columnChildIndex, columnParentIndex, lineChildIndex } = cellMarked
@@ -78,11 +76,24 @@ export default function useTicTacToe2() {
 
         const winner = verifyRowWinner(wins) || verifyColumnWinner(wins, player) || verifyDiagonalWinner(wins, player)
         if (winner) {
-            alert(winner)
+            navigation.reset({
+                index: 1,
+                routes: [
+                    {
+                        name: 'Menu'
+                    },
+                    {
+                        name: 'Win',
+                        params: {
+                            winner: winner as PlayerType
+                        }
+                    }
+                ]
+            })
         }
     }, [wins, cellMarked, currentPlayer])
 
-    //lidar proxima jogada
+
     useEffect(() => {
         if (cellMarked === undefined) return
         const { columnChildIndex, lineChildIndex } = cellMarked

@@ -73,7 +73,7 @@ const TicTacToe2: React.FC = () => {
                                         {
                                             columnParent.map((lineChild, lineChildIndex) => (
                                                 <Row
-                                                    opacity={nextCellToPlay.column === columnParentIndex && nextCellToPlay.line === lineParentIndex ? 1 : 0.3}
+                                                    opacity={nextCellToPlay.column == null || (nextCellToPlay.column === columnParentIndex && nextCellToPlay.line === lineParentIndex) ? 1 : 0.3}
                                                     index={lineChildIndex}
                                                     key={`${lineChildIndex}`}
                                                 >
