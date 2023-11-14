@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "bl-games",
+    "name": "BL Tic Tac Toe",
     "slug": "bl-games",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,7 +12,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#232323"
     },
     "assetBundlePatterns": [
       "**/*"

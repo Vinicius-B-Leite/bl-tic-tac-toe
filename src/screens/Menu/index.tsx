@@ -20,7 +20,7 @@ const Menu: React.FC = () => {
 
             <Box flex={1} paddingHorizontal={28} justifyContent='center'>
 
-                <Text variant='title' fontSize={40} textAlign='center'  >BL Games</Text>
+                <Text variant='title' fontSize={40} textAlign='center'  >BL Tic Tac Toe</Text>
 
                 <Box flex={0.3} justifyContent='space-evenly'>
                     <Button
