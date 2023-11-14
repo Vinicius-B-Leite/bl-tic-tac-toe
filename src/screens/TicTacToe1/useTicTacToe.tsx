@@ -4,6 +4,7 @@ import { verifyColumnWinner } from "@/utils/verifyColumnWinner"
 import { verifyDiagonalWinner } from "@/utils/verifyDiagonalWinner"
 import { verifyRowWinner } from "@/utils/verifyRowWinner"
 import { useEffect, useState } from "react"
+import { Alert } from "react-native"
 
 
 
@@ -16,6 +17,17 @@ export default function useTicTacToe() {
     const [winner, setWinner] = useState<PlayerType | string>('')
 
 
+
+    const resetGame = () => {
+        Alert.alert(
+            'O jogo empatou!',
+            undefined, [{
+                onPress: () => {
+                    setCurrentPlayer('X')
+                    setWinner('')
+                }
+            }])
+    }
     const handleMark = (lineIndex: number, columnIndex: number, player: PlayerType) => {
 
         setGame(oldGame => {
@@ -26,6 +38,12 @@ export default function useTicTacToe() {
             if (alreadyMarked) return [...oldGame]
 
             newGame[lineIndex][columnIndex] = player
+
+            let isTied = oldGame.map(row => row.some(v => v === '')).every(v => v === false)
+            if (isTied) {
+                resetGame()
+                return [['', '', ''], ['', '', ''], ['', '', '']]
+            }
 
             const winner = verifyRowWinner(oldGame) || verifyColumnWinner(oldGame, player) || verifyDiagonalWinner(oldGame, player)
             if (winner) {

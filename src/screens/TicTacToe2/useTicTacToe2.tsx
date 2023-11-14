@@ -4,6 +4,7 @@ import { verifyColumnWinner } from "@/utils/verifyColumnWinner";
 import { verifyDiagonalWinner } from "@/utils/verifyDiagonalWinner";
 import { verifyRowWinner } from "@/utils/verifyRowWinner";
 import { useEffect, useState } from "react";
+import { Alert } from "react-native";
 
 
 
@@ -94,6 +95,24 @@ export default function useTicTacToe2() {
                     }
                 ]
             })
+        }
+
+        const isTied = game.map(parentRow => parentRow.map(parentColumn => parentColumn.map(row => row.every(v => v === '')))).flat().flat()
+
+        if (isTied) {
+            Alert.alert(
+                'O jogo empatou!',
+                undefined,
+                [{
+                    onPress: () => {
+                        setCellMarked(undefined)
+                        setGame([[[['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']]], [[['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']]], [[['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']], [['', '', ''], ['', '', ''], ['', '', '']],],])
+                        setCurrentPlayer('X')
+                        setWins([['', '', ''], ['', '', ''], ['', '', '']])
+                        setNextCellToPlay({ line: null, column: null })
+                    }
+                }])
+
         }
     }, [wins, cellMarked, currentPlayer])
 
