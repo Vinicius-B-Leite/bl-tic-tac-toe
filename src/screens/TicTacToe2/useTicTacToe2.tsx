@@ -97,9 +97,10 @@ export default function useTicTacToe2() {
             })
         }
 
-        const isTied = game.map(parentRow => parentRow.map(parentColumn => parentColumn.map(row => row.every(v => v === '')))).flat().flat()
+        const isTied = game.map(parentRow => parentRow.map(parentColumn => parentColumn.map(row => row.every(v => v !== '')))).flat().flat()
+        console.log(isTied);
 
-        if (isTied) {
+        if (isTied.every(v => v === true)) {
             Alert.alert(
                 'O jogo empatou!',
                 undefined,
