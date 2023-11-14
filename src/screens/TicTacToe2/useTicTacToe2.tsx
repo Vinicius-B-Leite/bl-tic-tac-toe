@@ -26,7 +26,11 @@ export default function useTicTacToe2() {
 
     const handleMark = ({ columnChildIndex, columnParentIndex, lineChildIndex, lineParentIndex, player }: handleMarkProps) => {
 
-        const canPlay = nextCellToPlay.column == null || (nextCellToPlay.column === columnParentIndex && nextCellToPlay.line === lineParentIndex)
+        const anyWhereIsEnabled = nextCellToPlay.column == null && nextCellToPlay.line == null
+        const isCorrectCell = nextCellToPlay.column === columnParentIndex && nextCellToPlay.line === lineParentIndex
+        const cellWasMarked = game[lineParentIndex][columnParentIndex][lineChildIndex][columnChildIndex].length > 0
+
+        const canPlay = !cellWasMarked && (anyWhereIsEnabled || isCorrectCell)
         if (!canPlay) return
 
 
